@@ -1,0 +1,367 @@
+Kubernetes Deployment — Easy Explanation
+1️⃣ What is a Kubernetes Deployment?
+
+A Deployment is a Kubernetes object that:
+
+Runs your application
+
+Decides how many pods should run
+
+Decides which container image to use
+
+Automatically updates, scales, and rolls back your app
+
+👉 You tell Kubernetes what you want, and Kubernetes makes it happen.
+
+2️⃣ Why do we need Deployments?
+
+Without Deployment, updating an app is hard:
+
+Stop old pod
+
+Start new pod
+
+Check if it works
+
+Roll back if it fails
+
+❌ Doing this manually causes:
+
+Human mistakes
+
+Downtime
+
+Slow releases
+
+✅ Deployment automates everything.
+
+3️⃣ What Deployment does for you
+
+A Deployment can:
+
+Create Pods (via ReplicaSet)
+
+Keep the required number of pods always running
+
+Update pods safely
+
+Roll back to older versions
+
+Scale up or down
+
+Pause and resume updates
+
+4️⃣ Desired State (Very Important Concept)
+
+Kubernetes works on desired state.
+
+You say:
+
+replicas: 3
+image: myapp:v2
+
+
+Kubernetes ensures:
+
+3 pods are always running
+
+They are using myapp:v2
+
+If a pod crashes → Kubernetes recreates it automatically.
+
+5️⃣ Deployment Strategies (How updates happen)
+🔁 Rolling Update (Default)
+
+Pods are updated one by one
+
+No downtime
+
+Old and new versions run together for some time
+
+Rules:
+
+Max 25% pods can be down
+
+Max 25% extra pods can be created
+
+✅ Best for production
+❌ App must handle mixed versions
+
+🔄 Recreate Strategy
+
+All old pods are stopped
+
+Then new pods start
+
+❌ Causes downtime
+✅ Simple (only one version runs)
+
+Best for:
+
+Non-production
+
+Apps that cannot run multiple versions
+
+6️⃣ Updating a Deployment
+
+You change the pod template (image, env, config).
+
+Example:
+
+image: myapp:v3
+
+
+Kubernetes automatically:
+
+Starts rollout
+
+Tracks progress
+
+Saves previous versions
+
+7️⃣ Rollout Lifecycle
+
+A deployment can be:
+
+Progressing → updating pods
+
+Complete → everything successful
+
+Failed → error happened
+
+Check status:
+
+kubectl rollout status deployment my-app
+
+8️⃣ Rollback (Very Important)
+
+If a new version fails:
+
+kubectl rollout undo deployment my-app
+
+
+➡️ Instantly returns to previous working version.
+
+9️⃣ Declarative Deployment (Key Idea)
+
+You write a YAML file that describes:
+
+How the app should look
+
+How many pods
+
+Which image
+
+Then run:
+
+kubectl apply -f deployment.yaml
+
+
+Kubernetes keeps enforcing that state.
+
+🔑 MOST IMPORTANT POINTS (Exam / Interview)
+
+Deployment manages Pods indirectly via ReplicaSet
+
+It maintains desired state
+
+Supports rolling updates and rollback
+
+Rolling update = no downtime
+
+Recreate = downtime but simpler
+
+Fully automated by Kubernetes
+
+Changes to pod template trigger rollout
+
+🧠 One-line brain-lock
+
+A Kubernetes Deployment automates running, updating, scaling, and rolling back applications while always keeping the desired number of pods running.
+
+
+
+
+🔁 Kubernetes Deployment – Commands (Step by Step)
+🔹 STEP 1: Create a Deployment (Start the app)
+Command:
+kubectl apply -f deployment.yaml
+
+What it does:
+
+Sends your YAML to Kubernetes
+
+Kubernetes creates:
+
+Deployment
+
+ReplicaSet
+
+Pods
+
+🧠 This is how your app starts running
+
+🔹 STEP 2: Verify Deployment is created
+Command:
+kubectl get deployments
+
+What it does:
+
+Shows all deployments
+
+Displays:
+
+Desired replicas
+
+Available replicas
+
+🔹 STEP 3: Check Pods created by Deployment
+Command:
+kubectl get pods
+
+What it does:
+
+Lists running pods
+
+Confirms pods are up and running
+
+🔹 STEP 4: Get detailed Deployment info
+Command:
+kubectl describe deployment my-app
+
+What it does:
+
+Shows:
+
+Image version
+
+Update strategy
+
+Events (errors, restarts)
+
+🧠 Most useful debugging command
+
+🔹 STEP 5: Expose the Deployment (Make app accessible)
+Command:
+kubectl expose deployment my-app --type=NodePort --port=80
+
+What it does:
+
+Creates a Service
+
+Allows external traffic to reach pods
+
+🔹 STEP 6: Scale the Deployment
+Command:
+kubectl scale deployment my-app --replicas=5
+
+What it does:
+
+Increases or decreases number of pods
+
+Kubernetes auto-creates or deletes pods
+
+🔹 STEP 7: Update the application (Rolling Update)
+Method 1: Change YAML & apply again
+kubectl apply -f deployment.yaml
+
+Method 2: Change image directly
+kubectl set image deployment my-app my-container=myapp:v2
+
+What happens:
+
+Rolling update starts
+
+Old pods replaced gradually
+
+🔹 STEP 8: Monitor rollout progress
+Command:
+kubectl rollout status deployment my-app
+
+What it does:
+
+Shows rollout progress
+
+Tells if update is successful or stuck
+
+🔹 STEP 9: View rollout history
+Command:
+kubectl rollout history deployment my-app
+
+What it does:
+
+Shows previous versions
+
+Useful before rollback
+
+🔹 STEP 10: Rollback if update fails
+Command:
+kubectl rollout undo deployment my-app
+
+Or rollback to specific version:
+kubectl rollout undo deployment my-app --to-revision=2
+
+What it does:
+
+Restores previous working version
+
+🔹 STEP 11: Pause a Deployment
+Command:
+kubectl rollout pause deployment my-app
+
+What it does:
+
+Stops updates temporarily
+
+🔹 STEP 12: Resume Deployment
+Command:
+kubectl rollout resume deployment my-app
+
+🔹 STEP 13: Check logs of pods
+Command:
+kubectl logs <pod-name>
+
+Why:
+
+Debug app errors
+
+Verify app behavior
+
+🔹 STEP 14: Exec into a pod (Debug inside container)
+Command:
+kubectl exec -it <pod-name> -- /bin/sh
+
+Why:
+
+Check files
+
+Test configs
+
+Debug runtime issues
+
+🔹 STEP 15: Delete Deployment (Clean up)
+Command:
+kubectl delete deployment my-app
+
+What it does:
+
+Deletes deployment
+
+Automatically deletes ReplicaSet & Pods
+
+🧠 FULL FLOW (Mind-lock)
+apply → get → describe → expose
+      → scale → update → rollout status
+      → rollback (if needed)
+      → delete
+
+✅ MOST IMPORTANT COMMANDS (Interview Focus)
+Purpose	Command
+Create	kubectl apply
+Scale	kubectl scale
+Update	kubectl set image
+Monitor	kubectl rollout status
+Rollback	kubectl rollout undo
+🔑 One-line summary
+
+Kubernetes Deployment commands allow you to create, update, scale, monitor, and rollback applications in a safe and automated way.
