@@ -9,184 +9,168 @@ data:
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Kubernetes Blog</title>
+      <title>Wanderlust | Explore the Unseen</title>
+      <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;500;800&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
       <style>
-        /* Reset & basics */
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-        body { background: #f5f7fa; color: #333; line-height: 1.6; }
-        a { text-decoration: none; color: inherit; }
+        :root {
+          --primary: #0ea5e9;
+          --accent: #f59e0b;
+          --bg: #0f172a;
+          --glass: rgba(255, 255, 255, 0.05);
+          --glass-border: rgba(255, 255, 255, 0.1);
+          --text: #f8fafc;
+        }
 
-        /* Header */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: var(--bg); color: var(--text); font-family: 'Plus Jakarta Sans', sans-serif; overflow-x: hidden; }
+        
         header {
-          background: #326ce5;
-          color: #fff;
-          padding: 20px 0;
-          text-align: center;
-          box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+          position: fixed; width: 100%; top: 0; z-index: 1000;
+          padding: 20px 50px; display: flex; justify-content: space-between; align-items: center;
+          backdrop-filter: blur(15px); background: rgba(15, 23, 42, 0.7);
+          border-bottom: 1px solid var(--glass-border);
         }
-        header h1 { font-size: 2.5rem; margin-bottom: 10px; }
-        header p { font-size: 1.1rem; }
+        .logo { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: bold; letter-spacing: -1px; }
+        nav a { color: var(--text); text-decoration: none; margin-left: 30px; font-weight: 500; font-size: 0.9rem; transition: 0.3s; }
+        nav a:hover { color: var(--accent); }
 
-        /* Navigation */
-        nav {
-          display: flex;
-          justify-content: center;
-          gap: 20px;
-          margin-top: 10px;
-        }
-        nav a { color: #fff; font-weight: bold; transition: 0.3s; }
-        nav a:hover { color: #ffdd57; }
-
-        /* Hero Section */
         .hero {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          text-align: center;
-          padding: 60px 20px;
-          background: linear-gradient(135deg, #326ce5 0%, #4cc3f4 100%);
-          color: #fff;
+          height: 100vh; position: relative; display: flex; align-items: center; justify-content: center;
+          text-align: center; overflow: hidden;
         }
-        .hero h2 { font-size: 2rem; margin-bottom: 20px; }
-        .hero p { font-size: 1.1rem; max-width: 600px; }
+        .hero-img-bg {
+          position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+          object-fit: cover; z-index: -1; filter: brightness(0.5);
+        }
+        .hero-content h1 { 
+          font-family: 'Playfair Display', serif; font-size: clamp(3rem, 10vw, 6rem); 
+          line-height: 1.1; margin-bottom: 20px; font-style: italic;
+        }
+        .hero-content p { font-size: 1.2rem; max-width: 600px; margin: 0 auto 30px; opacity: 0.9; }
+        .cta-btn {
+          padding: 16px 40px; background: var(--primary); color: white; border: none;
+          border-radius: 50px; font-weight: 800; cursor: pointer; transition: 0.4s;
+          text-transform: uppercase; letter-spacing: 2px;
+        }
+        .cta-btn:hover { background: var(--accent); transform: scale(1.05); box-shadow: 0 0 30px rgba(245, 158, 11, 0.4); }
 
-        /* Blog Section */
-        .blog {
-          padding: 60px 20px;
-          max-width: 1200px;
-          margin: 0 auto;
-        }
-        .blog h2 { text-align: center; margin-bottom: 40px; font-size: 2rem; color: #326ce5; }
-        .blog-cards {
+        .blog { padding: 100px 50px; max-width: 1400px; margin: 0 auto; }
+        .blog-header { margin-bottom: 60px; text-align: left; }
+        .blog-header h2 { font-family: 'Playfair Display', serif; font-size: 3rem; margin-bottom: 10px; }
+        
+        .bento-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-          gap: 30px;
+          grid-template-columns: repeat(4, 1fr);
+          grid-auto-rows: 250px;
+          gap: 20px;
         }
+        
         .card {
-          background: #fff;
-          border-radius: 15px;
-          overflow: hidden;
-          box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-          transition: transform 0.3s;
+          position: relative; border-radius: 24px; overflow: hidden;
+          background: var(--glass); border: 1px solid var(--glass-border);
+          transition: 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
-        .card:hover { transform: translateY(-10px); }
-        .card img { width: 100%; height: 180px; object-fit: cover; }
-        .card-content { padding: 20px; }
-        .card-content h3 { color: #326ce5; margin-bottom: 10px; }
-        .card-content p { font-size: 0.95rem; color: #555; }
-        .card-content button {
-          margin-top: 10px;
-          background: #326ce5;
-          color: #fff;
-          border: none;
-          padding: 10px 15px;
-          border-radius: 5px;
-          cursor: pointer;
-          transition: 0.3s;
-        }
-        .card-content button:hover { background: #ffdd57; color: #333; }
+        .card:hover { transform: translateY(-10px); border-color: var(--primary); }
+        .card-large { grid-column: span 2; grid-row: span 2; }
+        .card-tall { grid-row: span 2; }
 
-        /* Footer */
-        footer {
-          background: #326ce5;
-          color: #fff;
-          text-align: center;
-          padding: 20px 0;
-          margin-top: 40px;
+        .card img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.7); transition: 0.5s; }
+        .card:hover img { filter: brightness(1); transform: scale(1.05); }
+        
+        .card-info {
+          position: absolute; bottom: 0; left: 0; padding: 30px;
+          background: linear-gradient(transparent, rgba(0,0,0,0.8));
+          width: 100%;
         }
+        .card-info h3 { font-size: 1.5rem; margin-bottom: 5px; color: #fff; }
+        .card-info p { font-size: 0.9rem; opacity: 0.8; }
 
-        /* Scroll animations */
-        .fade-in {
-          opacity: 0;
-          transform: translateY(20px);
-          transition: opacity 0.8s ease, transform 0.8s ease;
-        }
-        .fade-in.visible {
-          opacity: 1;
-          transform: translateY(0);
-        }
+        footer { padding: 100px 50px; background: #000; text-align: center; border-top: 1px solid var(--glass-border); }
+        
+        .fade-in { opacity: 0; transform: translateY(30px); transition: 0.8s all ease; }
+        .fade-in.visible { opacity: 1; transform: translateY(0); }
 
-        @media(max-width: 600px){
-          header h1 { font-size: 2rem; }
-          .hero h2 { font-size: 1.5rem; }
+        @media (max-width: 900px) {
+          .bento-grid { grid-template-columns: repeat(2, 1fr); }
+          header { padding: 20px; }
+          nav { display: none; }
         }
       </style>
     </head>
     <body>
-
       <header>
-        <h1>Kubernetes Insights</h1>
-        <p>Your ultimate guide to Kubernetes, containers, and cloud-native deployments</p>
+        <div class="logo">Wanderlust.</div>
         <nav>
-          <a href="#hero">Home</a>
-          <a href="#blog">Blog</a>
-          <a href="#contact">Contact</a>
+          <a href="#hero">Destinations</a>
+          <a href="#blog">Journals</a>
+          <a href="#contact">Book Stay</a>
         </nav>
       </header>
 
       <section class="hero" id="hero">
-        <h2>Master Kubernetes Like a Pro</h2>
-        <p>Explore tutorials, tips, and deep dives into Kubernetes clusters, pods, and container orchestration.</p>
+        <img src="https://images.unsplash.com/photo-1506929113674-bf8316416755?auto=format&fit=crop&q=80&w=2000" class="hero-img-bg" alt="Ocean">
+        <div class="hero-content">
+          <h1>The World is <br> <i>Waiting.</i></h1>
+          <p>Escape the ordinary and dive into the most mesmerizing landscapes the earth has to offer.</p>
+          <button class="cta-btn">Start Your Journey</button>
+        </div>
       </section>
 
       <section class="blog" id="blog">
-        <h2>Latest Blog Posts</h2>
-        <div class="blog-cards">
-          <div class="card fade-in">
-            <img src="https://source.unsplash.com/400x200/?cloud,kubernetes" alt="Blog 1">
-            <div class="card-content">
-              <h3>Getting Started with Kubernetes</h3>
-              <p>Learn the basics of Kubernetes architecture, clusters, pods, and services to kickstart your journey.</p>
-              <button onclick="alert('Read More Coming Soon!')">Read More</button>
+        <div class="blog-header">
+          <h2>Travel Journals</h2>
+          <p>Stories from the edge of the world.</p>
+        </div>
+        
+        <div class="bento-grid">
+          <div class="card card-large fade-in">
+            <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&q=80&w=800" alt="Maldives">
+            <div class="card-info">
+              <h3>The Blue Maldives</h3>
+              <p>Overwater villas and crystal clear silence.</p>
+            </div>
+          </div>
+          <div class="card card-tall fade-in">
+            <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&q=80&w=800" alt="Mountains">
+            <div class="card-info">
+              <h3>Swiss Peaks</h3>
+              <p>Cloud-touching luxury.</p>
             </div>
           </div>
           <div class="card fade-in">
-            <img src="https://source.unsplash.com/400x200/?docker,kubernetes" alt="Blog 2">
-            <div class="card-content">
-              <h3>Deploying Containers Efficiently</h3>
-              <p>Discover strategies to deploy and scale containers seamlessly in Kubernetes environments.</p>
-              <button onclick="alert('Read More Coming Soon!')">Read More</button>
+            <img src="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&q=80&w=800" alt="Lake">
+            <div class="card-info">
+              <h3>Morning Mist</h3>
+              <p>Canoeing in Canada.</p>
             </div>
           </div>
           <div class="card fade-in">
-            <img src="https://source.unsplash.com/400x200/?cloud,technology" alt="Blog 3">
-            <div class="card-content">
-              <h3>Advanced Kubernetes Networking</h3>
-              <p>Dive deep into networking, services, ingress, and load balancing in Kubernetes clusters.</p>
-              <button onclick="alert('Read More Coming Soon!')">Read More</button>
+            <img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&q=80&w=800" alt="Paris">
+            <div class="card-info">
+              <h3>Parisian Gold</h3>
+              <p>A night in the city of light.</p>
             </div>
           </div>
         </div>
       </section>
 
       <footer id="contact">
-        <p>&copy; 2026 Kubernetes Blog. All rights reserved.</p>
+        <h2 style="font-family: 'Playfair Display'; font-size: 2.5rem; margin-bottom: 20px;">Ready to go?</h2>
+        <p style="margin-bottom: 30px; opacity: 0.6;">Subscribe for exclusive 2026 itineraries.</p>
+        <p style="margin-top: 50px; opacity: 0.4; font-size: 0.8rem;">&copy; 2026 Wanderlust Travel Media.</p>
       </footer>
 
       <script>
-        // Smooth scroll
-        const links = document.querySelectorAll('nav a');
-        for (const link of links) {
-          link.addEventListener('click', (e) => {
-            e.preventDefault();
-            const target = document.querySelector(link.getAttribute('href'));
-            target.scrollIntoView({ behavior: 'smooth' });
-          });
-        }
-
-        // Scroll fade-in effect
         const faders = document.querySelectorAll('.fade-in');
-        const appearOptions = { threshold: 0.3, rootMargin: "0px 0px -50px 0px" };
-        const appearOnScroll = new IntersectionObserver(function(entries, observer){
+        const appearOptions = { threshold: 0.15, rootMargin: "0px 0px -50px 0px" };
+        const appearOnScroll = new IntersectionObserver(function(entries, observer) {
           entries.forEach(entry => {
-            if(!entry.isIntersecting) return;
+            if (!entry.isIntersecting) return;
             entry.target.classList.add('visible');
             observer.unobserve(entry.target);
           });
         }, appearOptions);
         faders.forEach(fader => appearOnScroll.observe(fader));
       </script>
-
     </body>
     </html>
