@@ -1,0 +1,10 @@
+kubectl apply -f 03-deployment.yaml
+
+# View the Deployment
+kubectl get deployments
+
+# View the ReplicaSet (Automatically created)
+kubectl get replicasets
+
+# View the Pods
+kubectl get pods
